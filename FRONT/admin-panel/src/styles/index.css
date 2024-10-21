@@ -1,0 +1,78 @@
+/* src/styles/index.css */
+
+:root {
+  --background-color: #121212;
+  --secondary-background: #1e1e1e;
+  --form-background: #2c2c2c;
+  --input-background: #3a3a3a;
+  --accent-color: #bb86fc;
+  --accent-hover: #9a67ea;
+  --text-color: #ffffff;
+  --secondary-text: #cccccc;
+  --error-color: #ff6b6b;
+  --success-color: #4caf50;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--accent-color);
+}
+
+p,
+li {
+  color: var(--secondary-text);
+}
+
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tech-stack .tech-icons {
+    flex-direction: column;
+  }
+
+  .tech-icon {
+    width: 100%;
+  }
+
+  .features {
+    padding: 0 10px;
+  }
+
+  .slide-out-panel {
+    width: 100%;
+  }
+}

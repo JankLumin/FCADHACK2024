@@ -1,0 +1,75 @@
+/* src/styles/loginForm.css */
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.auth-form,
+.reg-form {
+  width: 100%;
+}
+
+.auth-form form,
+.reg-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: var(--form-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-form input,
+.reg-form input {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.auth-form input::placeholder,
+.reg-form input::placeholder {
+  color: #aaaaaa;
+}
+
+.auth-form input:focus,
+.reg-form input:focus {
+  background-color: #4a4a4a;
+  outline: none;
+}
+
+.auth-form button,
+.reg-form button {
+  padding: 12px;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 5px;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-weight: bold;
+}
+
+.auth-form button:hover,
+.reg-form button:hover {
+  background-color: var(--accent-hover);
+}
+
+.auth-form button:active,
+.reg-form button:active {
+  transform: scale(0.98);
+}
+
+.errors-container {
+  color: var(--error-color);
+}
+
+.success {
+  color: var(--success-color);
+}
