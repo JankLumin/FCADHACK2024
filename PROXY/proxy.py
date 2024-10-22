@@ -196,7 +196,7 @@ def upload():
 
         # Обработка сообщения
         processed_message = proxy.process_message(message)
-        #  print(f"Обработанное сообщение: {processed_message}")
+        print(f"Обработанное сообщение: {processed_message}")
 
         # Отправка на бэкенд
         response = proxy.send_to_back(processed_message, ENDPOINT)
