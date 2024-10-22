@@ -3,11 +3,11 @@
 export const loginUser = async (userData) => {
   try {
     const response = await fetch("http://127.0.0.1:8000/api/users/login/", {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+          'Content-Type': 'application/json',
       },
-      credentials: "include",
+      credentials: 'include',
       body: JSON.stringify(userData),
     });
 
