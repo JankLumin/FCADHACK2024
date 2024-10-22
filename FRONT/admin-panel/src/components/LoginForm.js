@@ -1,7 +1,7 @@
 // src/components/LoginForm.js
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { loginUser } from "../services/login.js";
@@ -13,7 +13,7 @@ const schema = yup.object().shape({
   password: yup.string().min(8, "Минимум 8 символов").required("Пароль обязателен"),
 });
 
-function LoginForm({ onSwitch, onClose }) {
+function LoginForm({ onSwitch, onClose, setIsAuthenticated }) {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
 
@@ -32,6 +32,7 @@ function LoginForm({ onSwitch, onClose }) {
       await loginUser(data);
       reset();
       onClose();
+      setIsAuthenticated(true);
       navigate("/admin");
     } catch (error) {
       setServerError(error.message);
