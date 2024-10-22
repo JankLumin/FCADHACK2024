@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchUserData, updateSettings } from "../services/admin";
 import { motion } from "framer-motion";
-import { toast } from "react-toastify"; // Добавляем импорт react-toastify для уведомлений
+import { toast } from "react-toastify"; // Для уведомлений
 import "../styles/adminPanel.css";
 
 function AdminPanel() {
@@ -17,8 +17,8 @@ function AdminPanel() {
       Endpoint: false,
       "Номер телефона": false,
       //Login: false,
-      "Логин": false,
-      "Пароль": false,
+      Логин: false,
+      Пароль: false,
       Timestamp: false,
       Message: false,
       SupportLevel: false,
@@ -50,8 +50,8 @@ function AdminPanel() {
       "Срок действия карты": false,
     },
     study: {
-      "Специальность": false,
-      "Направление": false,
+      Специальность: false,
+      Направление: false,
       "Учебное заведение": false,
       "Серия/Номер диплома": false,
       "Регистрационный номер": false,
@@ -61,10 +61,11 @@ function AdminPanel() {
   const [way, setWay] = useState({
     Mask: false,
     Delete: false,
-    Filter: false
-  })
+    Filter: false,
+  });
 
   useEffect(() => {
+    // Функция для первоначальной загрузки данных через REST API
     const getUserData = async () => {
       try {
         const data = await fetchUserData();
@@ -77,6 +78,52 @@ function AdminPanel() {
     };
 
     getUserData();
+
+    // Инициализация WebSocket соединения
+    const socket = new WebSocket("ws://127.0.0.1:8001/ws/send-user-data/");
+
+    // Обработчик получения сообщений
+    socket.onmessage = function (event) {
+      try {
+        const data = JSON.parse(event.data);
+        // Предполагается, что сервер отправляет массив пользователей
+        if (Array.isArray(data)) {
+          setUserData(data);
+        } else {
+          // Если сервер отправляет объект с данными, адаптируйте это под ваш формат
+          setUserData((prevData) => [...prevData, data]);
+        }
+        setLoading(false);
+      } catch (parseError) {
+        console.error("Ошибка парсинга данных WebSocket:", parseError);
+      }
+    };
+
+    // Обработчик открытия соединения
+    socket.onopen = function () {
+      console.log("WebSocket connection established");
+      // При необходимости отправьте сообщение на сервер после установления соединения
+      // socket.send(JSON.stringify({ command: "start sending user data" }));
+    };
+
+    // Обработчик ошибок WebSocket
+    socket.onerror = function (error) {
+      console.error("WebSocket error:", error);
+      setError("Ошибка WebSocket: " + error.message);
+    };
+
+    // Обработчик закрытия соединения
+    socket.onclose = function (event) {
+      console.log("WebSocket closed with code:", event.code);
+      if (event.code !== 1000) {
+        setError("WebSocket закрыт с ошибкой");
+      }
+    };
+
+    // Очистка при размонтировании компонента
+    return () => {
+      socket.close();
+    };
   }, []);
 
   const handleCheckboxChange = (category, field) => {
@@ -95,7 +142,6 @@ function AdminPanel() {
       [field]: !prevWay[field],
     }));
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,10 +149,10 @@ function AdminPanel() {
     // Собираем активные поля в один массив
     const selectedFields = [];
 
-    const categories = ['account', 'passport', 'location', 'bank', 'study'];
+    const categories = ["account", "passport", "location", "bank", "study"];
 
-    categories.forEach(category => {
-      Object.keys(settings[category]).forEach(field => {
+    categories.forEach((category) => {
+      Object.keys(settings[category]).forEach((field) => {
         if (settings[category][field]) {
           selectedFields.push(field);
         }
@@ -117,7 +163,7 @@ function AdminPanel() {
       Mask: way.Mask,
       Delete: way.Delete,
       Filter: way.Filter,
-      Fields_to_hide: selectedFields
+      Fields_to_hide: selectedFields,
     };
 
     // Логируем отправляемые настройки для проверки
@@ -152,11 +198,7 @@ function AdminPanel() {
               <h3>Настройки</h3>
               {Object.keys(way).map((field) => (
                 <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={way[field]}
-                    onChange={() => handleWayChange(field)}
-                  />
+                  <input type="checkbox" checked={way[field]} onChange={() => handleWayChange(field)} />
                   {field}
                 </label>
               ))}
