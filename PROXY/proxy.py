@@ -30,7 +30,6 @@ class Proxy:
             result = self.mask_message(dictionaries, fields_to_hide)
         else:
             result = self.create_json(dictionaries)
-        print(7)    
         result = list("[\n" + ",\n".join(i) + "\n]" for i in result)
         return result
     
@@ -79,30 +78,27 @@ class Proxy:
             for i in dictionaries:
                 lst.append(i)
                 counter += 1
-                if counter % 500 == 0:
+                if counter % 400 == 0:
                     new_dictionaries.append(lst)
                     lst.clear()
-            if lst.count > 0:
+            if len(lst) > 0:
                 new_dictionaries.append(lst)
-                
             dump_with_options = partial(json.dumps, ensure_ascii=False) 
             result = list()
-            for i in lst: 
-                result += pool.map(dump_with_options, i)
+            for i in new_dictionaries: 
+                result.append(list(pool.map(dump_with_options, i)))
         return result
     
     def filter_message(self, dictionaries, fields_to_hide):
         list_to_del = list()
-        print(2)
         index = 0
         for i in dictionaries:
             if self.replace_data_filter(i["Message"], fields_to_hide) == True:
                 list_to_del.append(index)
             index += 1
-        print(3)
-        for i in list_to_del:
+        list_to_del = list_to_del[::-1]
+        for i in list_to_del : 
             dictionaries.remove(i)
-        print(4)
         return self.create_json(dictionaries)
                 
     
@@ -111,9 +107,8 @@ class Proxy:
             for j in fields_to_hide:
                 if j in i:
                     del i[j]       
-        
         for i in dictionaries:
-            i["Message"] = self.change_message(i["Message"], fields_to_hide)
+            i["Message"] = self.replace_data_filter(i["Message"], fields_to_hide)
         return self.create_json(dictionaries) 
 
     def mask_message(self, dictionaries, fields_to_hide):
@@ -121,7 +116,6 @@ class Proxy:
             for j in fields_to_hide:
                 if j in i:
                     i[j] = "***"        
-        
         for i in dictionaries:
             i["Message"] = self.replace_data_mask(i["Message"], fields_to_hide)
         return self.create_json(dictionaries)
@@ -188,11 +182,10 @@ def upload():
 
         # Обработка сообщения
         processed_message = proxy.process_message(message)
-        print(1)
-        print(f"Обработанное сообщение: {processed_message}")
+      #  print(f"Обработанное сообщение: {processed_message}")
 
         # Отправка на бэкенд
-        response = proxy.send_to_back(processed_message)
+        response = proxy.send_to_back(processed_message, ENDPOINT)
 
         if response is None:
             return (
