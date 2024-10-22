@@ -27,12 +27,17 @@ function App() {
     setIsSidebarOpen(true);
   };
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token"); // Удаляем токен
+    window.location.reload(); // Перезагружаем страницу, чтобы обновить состояние
+  };
+
   const handleCloseSidebar = () => {
     setIsSidebarOpen(false);
   };
 
-  //const isAuthenticated = !!localStorage.getItem("token");
-  const isAuthenticated = true;
+  const isAuthenticated = !!localStorage.getItem("token");
+  //const isAuthenticated = true;
 
   return (
     <div className="container">
@@ -40,7 +45,7 @@ function App() {
         <SplashScreen />
       ) : (
         <>
-          <Navbar onAuthClick={handleAuthClick} />
+          <Navbar onAuthClick={handleAuthClick} isAuthenticated={isAuthenticated} onLogoutClick={handleLogoutClick}/>
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/" replace />} />
