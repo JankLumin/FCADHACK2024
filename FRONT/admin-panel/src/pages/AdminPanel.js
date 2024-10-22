@@ -64,20 +64,16 @@ function AdminPanel() {
     Filter: false
   })
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const data = await fetchUserData();
-        setUserData(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    getUserData();
-  }, []);
+  const getUserData = async () => {
+    try {
+      const data = await fetchUserData();
+      setUserData(data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   const handleCheckboxChange = (category, field) => {
     setSettings((prevSettings) => ({

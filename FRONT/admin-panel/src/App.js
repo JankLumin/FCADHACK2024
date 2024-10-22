@@ -36,8 +36,8 @@ function App() {
     setIsSidebarOpen(false);
   };
 
-  //const isAuthenticated = !!localStorage.getItem("token");
-  const isAuthenticated = true;
+  const isAuthenticated = !!localStorage.getItem("token");
+  //const isAuthenticated = false;
 
   return (
     <div className="container">
