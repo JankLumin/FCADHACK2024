@@ -10,6 +10,7 @@ from flask_cors import CORS  # Импортируем Flask-CORS
 
 number_of_cores = 12
 ENDPOINT = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
+STATUS = False
 app = Flask(__name__)
 CORS(app)  # Разрешаем CORS для всех доменов и методов
 
@@ -38,15 +39,16 @@ class Proxy:
         """
         Отправляет обработанное сообщение на бек
         """
+        STATUS = False
         try:
-            # time.sleep(10)
-
             url = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
             headers = {
+                "X-Num-Of-Packet": "1",
                 "Content-Type": "application/json",
                 "X-Proxy-Auth": "V%U<UwFo[#V/,l<$9plp]KE[6@=tU^pDdP|<2<G<C;V/{=Til9~!L|Gs2i*4",
             }
             for message in messages:
+                headers["X-Num-Of-Packet"] = str(int(headers["X-Num-Of-Packet"]) + 1)
                 response = requests.post(
                     url, data=message.encode("utf-8"), headers=headers
                 )
@@ -56,6 +58,8 @@ class Proxy:
                     print(
                         f"Ошибка при отправке запроса: {response.status_code}, {response.text}"
                     )
+                if STATUS == True:
+                    break
 
         except Exception as e:
             print(f"Ошибка при отправке запроса на бекенд: {e}")
@@ -81,7 +85,7 @@ class Proxy:
             for i in dictionaries:
                 lst.append(i)
                 counter += 1
-                if counter % 100000000 == 0:
+                if counter % 5000 == 0:
                     new_dictionaries.append(lst)
                     lst.clear()
             if len(lst) > 0:
@@ -184,6 +188,7 @@ def upload():
         if request.is_json:
             data = request.get_json()
             message = json.dumps(data, ensure_ascii=False)
+            STATUS = True
         else:
             message = request.get_data(as_text=True)
 
@@ -195,7 +200,7 @@ def upload():
 
         # Отправка на бэкенд
         response = proxy.send_to_back(processed_message, ENDPOINT)
-
+        STATUS = False
         if response is None:
             return (
                 jsonify(

@@ -36,8 +36,8 @@ function App() {
     setIsSidebarOpen(false);
   };
 
-  const isAuthenticated = !!localStorage.getItem("token");
-  //const isAuthenticated = true;
+  //const isAuthenticated = !!localStorage.getItem("token");
+  const isAuthenticated = true;
 
   return (
     <div className="container">
@@ -45,7 +45,7 @@ function App() {
         <SplashScreen />
       ) : (
         <>
-          <Navbar onAuthClick={handleAuthClick} isAuthenticated={isAuthenticated} onLogoutClick={handleLogoutClick}/>
+          <Navbar onAuthClick={handleAuthClick} isAuthenticated={isAuthenticated} onLogoutClick={handleLogoutClick} />
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/" replace />} />
