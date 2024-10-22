@@ -10,10 +10,15 @@ import SplashScreen from "./components/SplashScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/app.css";
+import Cookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "./services/logout";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('access_token'))
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,17 +32,21 @@ function App() {
     setIsSidebarOpen(true);
   };
 
-  const handleLogoutClick = () => {
-    localStorage.removeItem("token"); // Удаляем токен
-    window.location.reload(); // Перезагружаем страницу, чтобы обновить состояние
+  const handleLogoutClick = async () => {
+    try {
+      await logoutUser();
+      navigate('/');
+    } catch (error) {
+
+      console.error('Ошибка при выходе:', error);
+    }
+
+    window.location.reload(); 
   };
 
   const handleCloseSidebar = () => {
     setIsSidebarOpen(false);
   };
-
-  //const isAuthenticated = !!localStorage.getItem("token");
-  const isAuthenticated = true;
 
   return (
     <div className="container">
@@ -50,7 +59,7 @@ function App() {
             <Route path="/" element={<WelcomePage />} />
             <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/" replace />} />
           </Routes>
-          <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
+          <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} setIsAuthenticated={setIsAuthenticated}/>
           {/* Контейнер для уведомлений */}
           <ToastContainer position="top-right" autoClose={3000} />
         </>
