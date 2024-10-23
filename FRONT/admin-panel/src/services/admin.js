@@ -7,6 +7,7 @@ export const fetchUserData = async () => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      
     },
   });
 
@@ -19,11 +20,12 @@ export const fetchUserData = async () => {
   return data;
 };
 
-export const updateSettings = async (selectedFields) => {
+export const updateSettings = async (selectedFields, email) => {
   const response = await fetch("http://127.0.0.1:8080/upload", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-UserEmail": {email}
     },
     body: JSON.stringify(selectedFields),
   });

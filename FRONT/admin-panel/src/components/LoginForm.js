@@ -13,7 +13,7 @@ const schema = yup.object().shape({
   password: yup.string().min(8, "Минимум 8 символов").required("Пароль обязателен"),
 });
 
-function LoginForm({ onSwitch, onClose, setIsAuthenticated }) {
+function LoginForm({ onSwitch, onClose, setIsAuthenticated, setUserEmail }) {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
 
@@ -33,6 +33,7 @@ function LoginForm({ onSwitch, onClose, setIsAuthenticated }) {
       reset();
       onClose();
       setIsAuthenticated(true);
+      setUserEmail(data.email);
       navigate("/admin");
     } catch (error) {
       setServerError(error.message);

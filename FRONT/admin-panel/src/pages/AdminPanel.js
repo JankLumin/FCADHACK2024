@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "../styles/adminPanel.css";
 
-function AdminPanel() {
+function AdminPanel({userEmail}) {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -99,7 +99,7 @@ function AdminPanel() {
       setIsConnected(true); // Обновляем состояние подключения
 
       // Отправляем команду на сервер для начала передачи данных
-      socket.send(JSON.stringify({ command: "start sending user data" }));
+      socket.send(JSON.stringify({ command: "start sending user data", "X-UserEmail": {userEmail} }));
     };
 
     // Обработчик получения сообщений
@@ -201,7 +201,7 @@ function AdminPanel() {
     console.log("Отправляемые поля:", payload);
 
     try {
-      await updateSettings(payload);
+      await updateSettings(payload, userEmail);
       toast.success("Настройки успешно сохранены!");
     } catch (err) {
       toast.error(`Ошибка: ${err.message}`);
