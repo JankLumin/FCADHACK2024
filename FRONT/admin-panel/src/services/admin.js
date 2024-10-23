@@ -24,16 +24,6 @@ export const fetchUserData = async () => {
   return data;
 };
 
-/**
- * Функция для обновления настроек.
- * @param {Object} selectedFields - Объект с массивами полей для каждого действия.
- * Пример:
- * {
- *   mask: ["Email", "Endpoint"],
- *   delete: ["Password"],
- *   filter: ["UserID"]
- * }
- */
 export const updateSettings = async (selectedFields) => {
   const response = await fetch("http://127.0.0.1:8080/upload", {
     method: "POST",
