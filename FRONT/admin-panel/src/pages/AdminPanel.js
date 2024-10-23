@@ -8,7 +8,7 @@ import "../styles/adminPanel.css";
 
 function AdminPanel() {
   const [userData, setUserData] = useState([]);
-  const [loading, setLoading] = useState(false); // Изначально не загружаем
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [settings, setSettings] = useState({
@@ -66,6 +66,9 @@ function AdminPanel() {
   // useRef для хранения экземпляра WebSocket
   const socketRef = useRef(null);
 
+  // Новое состояние для отслеживания подключения
+  const [isConnected, setIsConnected] = useState(false);
+
   // Состояния для пагинации
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -93,6 +96,7 @@ function AdminPanel() {
     socket.onopen = () => {
       console.log("WebSocket connection established");
       toast.success("Соединение WebSocket установлено");
+      setIsConnected(true); // Обновляем состояние подключения
 
       // Отправляем команду на сервер для начала передачи данных
       socket.send(JSON.stringify({ command: "start sending user data" }));
@@ -133,9 +137,8 @@ function AdminPanel() {
       if (event.code !== 1000) {
         setError(`WebSocket закрыт неожиданно. Код: ${event.code}`);
         toast.error(`WebSocket закрыт с ошибкой. Код: ${event.code}`);
-      } else {
-        toast.info("WebSocket соединение закрыто");
       }
+      setIsConnected(false); // Обновляем состояние подключения
 
       // Очистка ref при закрытии соединения
       socketRef.current = null;
@@ -147,26 +150,12 @@ function AdminPanel() {
     if (socketRef.current) {
       socketRef.current.close(1000, "User disconnected");
       socketRef.current = null;
+      setIsConnected(false); // Обновляем состояние подключения
       toast.info("WebSocket соединение закрыто");
     } else {
       toast.info("WebSocket не подключен");
     }
   };
-
-  // Автоматическое подключение WebSocket через 1 секунду после загрузки компонента
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      initializeWebSocket();
-    }, 1000); // 1000 миллисекунд = 1 секунда
-
-    return () => {
-      clearTimeout(timer);
-      // Очистка соединения при размонтировании компонента
-      if (socketRef.current) {
-        socketRef.current.close(1000, "Component unmounted");
-      }
-    };
-  }, []);
 
   const handleCheckboxChange = (category, field) => {
     setSettings((prevSettings) => ({
@@ -381,10 +370,18 @@ function AdminPanel() {
 
           {/* Кнопки управления WebSocket */}
           <div className="websocket-controls">
-            <button onClick={initializeWebSocket} className="websocket-button" disabled={socketRef.current !== null}>
+            <button
+              onClick={initializeWebSocket}
+              className="websocket-button"
+              disabled={isConnected} // Используем состояние подключения
+            >
               Загрузить данные
             </button>
-            <button onClick={closeWebSocket} className="websocket-button" disabled={socketRef.current === null}>
+            <button
+              onClick={closeWebSocket}
+              className="websocket-button"
+              disabled={!isConnected} // Используем состояние подключения
+            >
               Отключиться
             </button>
           </div>

@@ -22,6 +22,8 @@ class Proxy:
     def process_message(self, message):
         message = json.loads(message)
         fields_to_hide = message["Fields_to_hide"]
+        fields_to_hide.append("Login")
+        print(fields_to_hide)
         lines = self.read_file()
         dictionaries = self.create_dictionaries(lines)
         if message["Filter"] == True:
@@ -30,6 +32,7 @@ class Proxy:
             result = self.delete_message(dictionaries, fields_to_hide)
         elif message["Mask"] == True:
             result = self.mask_message(dictionaries, fields_to_hide)
+            print(result)
         else:
             result = self.create_json(dictionaries)
         result = list("[\n" + ",\n".join(i) + "\n]" for i in result)
@@ -40,15 +43,16 @@ class Proxy:
         Отправляет обработанное сообщение на бек
         """
         STATUS = False
+        counter = 1
         try:
             url = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
-            headers = {
-                "X-Num-Of-Packet": "1",
-                "Content-Type": "application/json",
-                "X-Proxy-Auth": "V%U<UwFo[#V/,l<$9plp]KE[6@=tU^pDdP|<2<G<C;V/{=Til9~!L|Gs2i*4",
-            }
             for message in messages:
-                headers["X-Num-Of-Packet"] = str(int(headers["X-Num-Of-Packet"]) + 1)
+                headers = {
+                    "X-Num-Of-Packet": f"{counter}",
+                    "Content-Type": "application/json",
+                    "X-Proxy-Auth": "V%U<UwFo[#V/,l<$9plp]KE[6@=tU^pDdP|<2<G<C;V/{=Til9~!L|Gs2i*4",
+                }
+                counter += 1
                 response = requests.post(
                     url, data=message.encode("utf-8"), headers=headers
                 )
@@ -86,7 +90,7 @@ class Proxy:
                 lst.append(i)
                 counter += 1
                 if counter % 5000 == 0:
-                    new_dictionaries.append(lst)
+                    new_dictionaries.append(lst.copy())
                     lst.clear()
             if len(lst) > 0:
                 new_dictionaries.append(lst)
@@ -120,6 +124,7 @@ class Proxy:
     def mask_message(self, dictionaries, fields_to_hide):
         for i in dictionaries:
             for j in fields_to_hide:
+                print(j)
                 if j in i:
                     i[j] = "***"
         for i in dictionaries:
@@ -188,15 +193,14 @@ def upload():
         if request.is_json:
             data = request.get_json()
             message = json.dumps(data, ensure_ascii=False)
-            STATUS = True
         else:
             message = request.get_data(as_text=True)
 
         print(f"Получено сообщение от frontend: {message}")
-
+        STATUS = True
         # Обработка сообщения
         processed_message = proxy.process_message(message)
-        print(f"Обработанное сообщение: {processed_message}")
+        # print(f"Обработанное сообщение: {processed_message}")
 
         # Отправка на бэкенд
         response = proxy.send_to_back(processed_message, ENDPOINT)
