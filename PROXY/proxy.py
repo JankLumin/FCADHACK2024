@@ -22,8 +22,9 @@ class Proxy:
     def process_message(self, message):
         message = json.loads(message)
         fields_to_hide = message["Fields_to_hide"]
-        fields_to_hide.append("Login")
-        print(fields_to_hide)
+        if ("Логин") in fields_to_hide:
+            fields_to_hide.append("Login")
+        # print(fields_to_hide)
         lines = self.read_file()
         dictionaries = self.create_dictionaries(lines)
         if message["Filter"] == True:
@@ -32,7 +33,6 @@ class Proxy:
             result = self.delete_message(dictionaries, fields_to_hide)
         elif message["Mask"] == True:
             result = self.mask_message(dictionaries, fields_to_hide)
-            print(result)
         else:
             result = self.create_json(dictionaries)
         result = list("[\n" + ",\n".join(i) + "\n]" for i in result)
@@ -124,7 +124,6 @@ class Proxy:
     def mask_message(self, dictionaries, fields_to_hide):
         for i in dictionaries:
             for j in fields_to_hide:
-                print(j)
                 if j in i:
                     i[j] = "***"
         for i in dictionaries:
