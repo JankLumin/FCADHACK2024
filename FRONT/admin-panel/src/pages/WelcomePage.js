@@ -38,7 +38,7 @@ function WelcomePage() {
       <motion.h1 variants={itemVariants}>FCADHACK 2024</motion.h1>
       <motion.h2 variants={itemVariants}>Разработка Proxy-сервиса сквозной фильтрации и маскирования ЧД/ПД</motion.h2>
       <motion.p className="description" variants={itemVariants}>
-        Команда OstoCity пред
+        Команда OstoCity представляет свое решение данного задания
       </motion.p>
 
       <motion.div className="tech-stack" variants={itemVariants}>
@@ -138,7 +138,7 @@ function WelcomePage() {
       </motion.div>
 
       <motion.div className="features" variants={itemVariants}>
-        <h3>Основные возможности</h3>
+        <h3>Основные возможности программного продукта</h3>
         <ul>
           <li>Инновационные проекты и задачи</li>
           <li>Работа в командах и развитие навыков</li>
