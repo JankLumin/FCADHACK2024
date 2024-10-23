@@ -19,25 +19,30 @@
   margin: 0;
   font-size: 1.5em;
   color: var(--accent-color);
+  cursor: pointer;
 }
 
 .nav-buttons {
   display: flex;
   align-items: center;
+  height: 100%; /* Кнопки на всю высоту панели */
 }
 
 .nav-button {
-  margin-left: 10px;
-  padding: 8px 16px;
+  height: 40px; 
+  width: auto;
+  font-family: inherit;
   background-color: var(--accent-color);
   border: none;
+  gap: 5px;
+  margin: 5px;
   border-radius: 5px;
   color: #000000;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
-  transition: background-color 0.3s, transform 0.2s;
+  justify-content: center; /* Центрируем содержимое кнопки */
+  transition: background-color 0.3s, transform 0.2s;;
 }
 
 .nav-button:hover {
@@ -47,3 +52,4 @@
 .nav-button:active {
   transform: scale(0.98);
 }
+
