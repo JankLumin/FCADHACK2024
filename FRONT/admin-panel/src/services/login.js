@@ -17,7 +17,6 @@ export const loginUser = async (userData) => {
     }
 
     const data = await response.json();
-    localStorage.setItem("token", data.token);
     return data;
   } catch (error) {
     console.error("Ошибка:", error);
