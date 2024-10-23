@@ -2,48 +2,53 @@
 
 /* Основные стили */
 .admin-panel {
-  padding: 80px 20px 20px 20px;
+  padding: 60px 15px 15px 15px; /* Уменьшены отступы сверху и по бокам */
   text-align: center;
   color: var(--text-color);
-  background-color: #000000; /* Установлен черный фон */
+  background-color: #000000; /* Черный фон */
   min-height: 100vh; /* Полная высота экрана */
+  border: 2px solid #444444; /* Добавлена рамка */
 }
 
 .admin-content {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 20px; /* Увеличен промежуток между панелями */
   justify-content: center;
   align-items: flex-start;
-  max-width: 1400px; /* Увеличен максимум для большего пространства */
-  margin: 0 auto; /* Центрирование содержимого */
-  background-color: #1e1e1e; /* Темный фон для контента */
+  max-width: 1600px; /* Увеличена максимальная ширина с 1400px до 1600px */
+  margin: 0 auto;
+  background-color: #1e1e1e;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  border: 2px solid #444444; /* Увеличена толщина рамки */
 }
 
 /* Левая панель фильтров */
 .filters-panel {
-  background-color: #2c2c2c; /* Темный фон для панели фильтров */
-  padding: 20px;
+  background-color: #2c2c2c;
+  padding: 20px; /* Увеличены отступы */
   border-radius: 10px;
-  width: 250px;
-  min-width: 200px;
+  width: 350px; /* Увеличена ширина с 250px до 350px */
+  min-width: 300px; /* Увеличено минимальное значение с 200px до 300px */
   max-height: 100vh;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
-  position: relative; /* Для абсолютного позиционирования save-status */
+  position: relative;
+  border: 2px solid #444444; /* Увеличена толщина рамки с 1px до 2px */
 }
 
 .filters-panel h2 {
-  margin-bottom: 15px;
-  color: #ffffff; /* Белый цвет заголовка */
+  margin-bottom: 16px; /* Увеличен отступ */
+  color: #ffffff;
+  font-size: 1.5em; /* Увеличен размер шрифта */
+  cursor: default; /* Стандартный курсор для заголовка */
 }
 
 .filters-panel::-webkit-scrollbar {
-  width: 8px;
+  width: 6px; /* Уменьшена ширина скроллбара */
 }
 
 .filters-panel::-webkit-scrollbar-track {
@@ -52,7 +57,7 @@
 
 .filters-panel::-webkit-scrollbar-thumb {
   background: #888888;
-  border-radius: 4px;
+  border-radius: 3px; /* Уменьшен радиус скроллбара */
 }
 
 .filters-panel::-webkit-scrollbar-thumb:hover {
@@ -60,13 +65,18 @@
 }
 
 .settings-category {
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Уменьшен отступ */
+  border: 1px solid #444444; /* Добавлена рамка для категории */
+  border-radius: 8px; /* Скругление углов */
+  padding: 10px; /* Внутренние отступы */
+  background-color: #3a3a3a; /* Более светлый фон для категории */
 }
 
 .settings-category h3 {
-  margin-bottom: 10px;
-  font-size: 1.1em;
-  color: #ffffff; /* Белый цвет подзаголовков */
+  margin-bottom: 12px; /* Увеличен отступ */
+  font-size: 1.1em; /* Увеличен размер шрифта */
+  color: #ffffff;
+  cursor: pointer; /* Изменение курсора при наведении, если заголовок кликабелен */
 }
 
 .checkbox-label {
@@ -74,7 +84,7 @@
   align-items: center;
   margin-bottom: 8px;
   font-size: 0.95em;
-  color: #cccccc; /* Светло-серый цвет текста */
+  color: #cccccc;
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -86,21 +96,77 @@
 }
 
 .checkbox-label:hover {
-  color: #ffffff; /* Белый цвет при наведении */
+  color: #ffffff;
 }
 
+/* Новые стили для радиокнопок */
+.radio-group {
+  display: grid;
+  grid-template-columns: 150px repeat(4, 1fr); /* Фиксированная колонка для названия поля и 4 равные колонки для иконок */
+  align-items: center; /* Вертикальное центрирование */
+  gap: 6px; /* Уменьшен промежуток между элементами */
+  margin-bottom: 10px;
+  border-bottom: 1px solid #444444;
+  padding-bottom: 8px;
+}
+
+.field-label {
+  width: 150px; /* Фиксированная ширина */
+  text-align: right;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  white-space: nowrap; /* Предотвращает перенос текста */
+  overflow: hidden; /* Обрезает переполнение */
+  text-overflow: ellipsis; /* Добавляет многоточие при переполнении */
+  cursor: default; /* Стандартный курсор для меток полей */
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em; /* Увеличен размер иконок */
+  margin-right: 4px; /* Уменьшен отступ между иконками */
+  cursor: pointer; /* Изменение курсора при наведении */
+}
+
+.radio-label .icon {
+  font-size: 1em; /* Увеличен размер иконок */
+  margin-left: 3px; /* Уменьшен отступ между радиокнопкой и иконкой */
+  transition: color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  cursor: pointer; /* Изменение курсора при наведении */
+}
+
+.radio-label:hover .icon {
+  color: #ffffff; /* Белый цвет иконок при наведении */
+}
+
+.radio-group input[type="radio"] {
+  display: none; /* Скрываем стандартные радиокнопки */
+}
+
+/* Изменение цвета активной иконки на фиолетовый */
+.radio-group input[type="radio"]:checked + .icon {
+  color: var(--accent-color); /* Фиолетовый цвет для выбранной иконки */
+  transform: scale(1.2); /* Увеличение выбранной иконки */
+}
+
+/* Стили для кнопки сохранения */
 .save-button {
-  padding: 10px 20px;
+  padding: 8px 16px; /* Уменьшены отступы */
   background-color: #4caf50;
   border: none;
   border-radius: 5px;
-  color: #ffffff; /* Белый текст */
-  cursor: pointer;
+  color: #ffffff;
+  cursor: pointer; /* Изменение курсора при наведении */
   transition: background-color 0.3s, transform 0.2s;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 15px; /* Уменьшен отступ */
   width: 100%;
-  font-size: 1em; /* Увеличен размер шрифта */
+  font-size: 0.95em; /* Уменьшен размер шрифта */
 }
 
 .save-button:hover {
@@ -116,10 +182,10 @@
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.9em;
+  font-size: 0.85em; /* Уменьшен размер шрифта */
   color: var(--success-color);
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 5px 10px;
+  padding: 4px 8px; /* Уменьшены отступы */
   border-radius: 5px;
 }
 
@@ -134,40 +200,43 @@
 /* Центральная область данных */
 .data-section {
   flex: 1;
-  background-color: #2c2c2c; /* Темный фон для данных */
-  padding: 20px;
+  background-color: #2c2c2c;
+  padding: 15px; /* Уменьшены внутренние отступы */
   border-radius: 10px;
   min-height: 80vh;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
-  overflow: hidden; /* Предотвращает прокрутку всей страницы */
+  overflow: hidden;
+  border: 2px solid #444444; /* Увеличена толщина рамки */
 }
 
 .data-section h2 {
-  margin-bottom: 20px;
-  color: #ffffff; /* Белый цвет заголовка */
-  font-size: 1.5em; /* Увеличен размер заголовка */
+  margin-bottom: 15px; /* Уменьшен отступ */
+  color: #ffffff;
+  font-size: 1.3em; /* Уменьшен размер шрифта */
+  cursor: default; /* Стандартный курсор для заголовка */
 }
 
 /* Кнопки управления WebSocket */
 .websocket-controls {
-  margin-bottom: 15px;
+  margin-bottom: 12px; /* Уменьшен отступ */
 }
 
 .websocket-button {
-  padding: 8px 14px; /* Немного увеличены отступы */
-  margin-right: 10px; /* Отступ между кнопками */
+  padding: 6px 12px; /* Уменьшены отступы */
+  margin-right: 8px; /* Уменьшен отступ между кнопками */
   background-color: #2196f3;
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 1em; /* Увеличен размер шрифта */
+  cursor: pointer; /* Изменение курсора при наведении */
+  font-size: 0.9em; /* Уменьшен размер шрифта */
+  transition: background-color 0.3s;
 }
 
 .websocket-button:disabled {
   background-color: #90caf9;
-  cursor: not-allowed;
+  cursor: not-allowed; /* Запрещающий курсор для отключенных кнопок */
 }
 
 .websocket-button:hover:not(:disabled) {
@@ -176,9 +245,9 @@
 
 /* Стили для таблицы */
 .table-container {
-  max-height: 500px; /* Можно изменить в зависимости от требований */
+  max-height: 450px; /* Уменьшена высота */
   overflow-y: auto;
-  margin-top: 20px;
+  margin-top: 15px; /* Уменьшен отступ */
   border: 1px solid #444444;
   border-radius: 5px;
 }
@@ -186,44 +255,48 @@
 .user-data-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  background-color: #3a3a3a; /* Темный фон для таблицы */
+  margin-bottom: 15px; /* Уменьшен отступ */
+  background-color: #3a3a3a;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  /*table-layout: fixed; /* Фиксированная ширина колонок */
-  font-size: 14px; /* Увеличен размер шрифта для таблицы */
+  font-size: 13px; /* Уменьшен размер шрифта */
 }
 
 .user-data-table th,
 .user-data-table td {
-  border: 1px solid #444444; /* Темные границы */
-  padding: 8px 12px; /* Увеличены отступы для читаемости */
+  border: 1px solid #444444;
+  padding: 6px 10px; /* Уменьшены отступы */
   text-align: left;
-  word-wrap: break-word; /* Перенос длинных слов */
-  color: #ffffff; /* Белый текст */
+  word-wrap: break-word;
+  color: #ffffff;
 }
 
 .user-data-table th {
-  background-color: #555555; /* Более темный фон для заголовков */
+  background-color: #555555;
   font-weight: bold;
   position: sticky;
-  top: 0; /* Чтобы заголовки оставались видимыми при прокрутке */
+  top: 0;
   z-index: 1;
 }
 
+.user-data-table tbody tr {
+  cursor: pointer; /* Изменение курсора для строк таблицы */
+}
+
 .user-data-table tbody tr:nth-child(even) {
-  background-color: #3a3a3a; /* Зебровая раскраска */
+  background-color: #3a3a3a;
 }
 
 .user-data-table tbody tr:hover {
-  background-color: #555555; /* Цвет при наведении */
+  background-color: #555555;
   transform: scale(1.01);
+  cursor: pointer; /* Изменение курсора при наведении на строку */
 }
 
 /* Стили для скроллбара (опционально, для лучшего внешнего вида) */
 .table-container::-webkit-scrollbar {
-  width: 8px;
+  width: 6px; /* Уменьшена ширина скроллбара */
 }
 
 .table-container::-webkit-scrollbar-track {
@@ -232,7 +305,7 @@
 
 .table-container::-webkit-scrollbar-thumb {
   background: #888888;
-  border-radius: 4px;
+  border-radius: 3px; /* Уменьшен радиус скроллбара */
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
@@ -244,23 +317,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 15px; /* Уменьшен отступ */
 }
 
 .pagination-button {
-  padding: 8px 12px; /* Увеличены отступы */
-  margin: 0 4px; /* Отступ между кнопками */
+  padding: 6px 10px; /* Уменьшены отступы */
+  margin: 0 3px; /* Уменьшен отступ между кнопками */
   background-color: #2196f3;
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 1em; /* Увеличен размер шрифта */
+  cursor: pointer; /* Изменение курсора при наведении */
+  font-size: 0.9em; /* Уменьшен размер шрифта */
+  transition: background-color 0.3s;
 }
 
 .pagination-button:disabled {
   background-color: #90caf9;
-  cursor: not-allowed;
+  cursor: not-allowed; /* Запрещающий курсор для отключенных кнопок */
 }
 
 .pagination-button:hover:not(:disabled) {
@@ -277,15 +351,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Регулируйте высоту по необходимости */
+  height: 150px; /* Уменьшена высота */
 }
 
 .spinner {
-  border: 8px solid #444444; /* Темный фон спиннера */
-  border-top: 8px solid #2196f3; /* Акцентный цвет спиннера */
+  border: 6px solid #444444; /* Уменьшена толщина спиннера */
+  border-top: 6px solid #2196f3;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 40px; /* Уменьшен размер */
+  height: 40px; /* Уменьшен размер */
   animation: spin 1s linear infinite;
 }
 
@@ -304,11 +378,13 @@
   .admin-content {
     flex-direction: column;
     align-items: center;
+    max-width: 1000px; /* При необходимости можно изменить максимальную ширину */
   }
 
   .filters-panel {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px; /* Увеличена максимальная ширина с 400px до 500px */
+    padding: 20px; /* Сохранение увеличенных отступов */
   }
 
   .data-section {
@@ -317,17 +393,60 @@
   }
 
   .user-data-table {
-    font-size: 12px; /* Уменьшен размер шрифта для мобильных устройств */
+    font-size: 12px;
   }
 
   .checkbox-label {
-    font-size: 0.85em; /* Уменьшен размер шрифта */
+    font-size: 0.85em;
   }
 
   .save-button,
   .websocket-button,
   .pagination-button {
-    font-size: 0.9em; /* Уменьшен размер шрифта */
-    padding: 6px 10px; /* Уменьшены отступы */
+    font-size: 0.85em;
+    padding: 5px 8px;
   }
+
+  /* Адаптивные стили для радиокнопок */
+  .radio-group {
+    grid-template-columns: 150px repeat(4, 1fr); /* Увеличена ширина первой колонки */
+    gap: 4px;
+  }
+
+  .field-label {
+    width: 150px; /* Увеличена ширина для лучшего отображения длинных названий полей */
+    margin-bottom: 5px;
+    text-align: left;
+    padding-right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default; /* Стандартный курсор для меток полей */
+  }
+
+  .radio-label {
+    margin-right: 3px;
+    cursor: pointer; /* Изменение курсора при наведении */
+  }
+
+  .radio-label .icon {
+    font-size: 1.5em;
+    margin-left: 5px;
+    transition: color 0.3s, transform 0.2s;
+    cursor: pointer; /* Изменение курсора при наведении */
+  }
+}
+
+/* Дополнительные стили для иконок */
+.radio-label .icon {
+  font-size: 1em; /* Увеличен размер иконок */
+  margin-left: 3px; /* Уменьшен отступ между радиокнопкой и иконкой */
+  transition: color 0.3s, transform 0.2s;
+  cursor: pointer; /* Изменение курсора при наведении */
+}
+
+/* Выделение выбранной иконки */
+.radio-group input[type="radio"]:checked + .icon {
+  color: var(--accent-color); /* Фиолетовый цвет для выбранной иконки */
+  transform: scale(1.2); /* Увеличение выбранной иконки */
 }

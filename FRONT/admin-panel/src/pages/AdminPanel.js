@@ -1,9 +1,10 @@
 // src/pages/AdminPanel.js
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { updateSettings } from "../services/admin";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { FaMask, FaTrash, FaFilter, FaTimes } from "react-icons/fa"; // Импортируем иконки
 import "../styles/adminPanel.css";
 
 function AdminPanel() {
@@ -11,56 +12,51 @@ function AdminPanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Инициализируем все поля как "none" по умолчанию
   const [settings, setSettings] = useState({
     account: {
-      Email: false,
-      Endpoint: false,
-      "Номер телефона": false,
-      Логин: false,
-      Пароль: false,
-      Timestamp: false,
-      Message: false,
-      SupportLevel: false,
-      UserID: false,
+      Email: "none",
+      Endpoint: "none",
+      "Номер телефона": "none",
+      Логин: "none",
+      Пароль: "none",
+      Timestamp: "none",
+      Message: "none",
+      SupportLevel: "none",
+      UserID: "none",
     },
     passport: {
-      Фамилия: false,
-      Имя: false,
-      Отчество: false,
-      "Дата рождения": false,
-      Пол: false,
-      Возраст: false,
-      "Адрес прописки": false,
-      "Серия и номер паспорта": false,
-      "Код подразделения": false,
-      "Кем выдан": false,
+      Фамилия: "none",
+      Имя: "none",
+      Отчество: "none",
+      "Дата рождения": "none",
+      Пол: "none",
+      Возраст: "none",
+      "Адрес прописки": "none",
+      "Серия и номер паспорта": "none",
+      "Код подразделения": "none",
+      "Кем выдан": "none",
     },
     location: {
-      Страна: false,
-      Регион: false,
-      Город: false,
-      Улица: false,
-      "Номер дома": false,
+      Страна: "none",
+      Регион: "none",
+      Город: "none",
+      Улица: "none",
+      "Номер дома": "none",
     },
     bank: {
-      "номер счета": false,
-      "Имя владельца карты": false,
-      "Номер кредитной карты": false,
-      "Срок действия карты": false,
+      "номер счета": "none",
+      "Имя владельца карты": "none",
+      "Номер кредитной карты": "none",
+      "Срок действия карты": "none",
     },
     study: {
-      Специальность: false,
-      Направление: false,
-      "Учебное заведение": false,
-      "Серия/Номер диплома": false,
-      "Регистрационный номер": false,
+      Специальность: "none",
+      Направление: "none",
+      "Учебное заведение": "none",
+      "Серия/Номер диплома": "none",
+      "Регистрационный номер": "none",
     },
-  });
-
-  const [way, setWay] = useState({
-    Mask: false,
-    Delete: false,
-    Filter: false,
   });
 
   // useRef для хранения экземпляра WebSocket
@@ -157,48 +153,54 @@ function AdminPanel() {
     }
   };
 
-  const handleCheckboxChange = (category, field) => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      [category]: {
-        ...prevSettings[category],
-        [field]: !prevSettings[category][field],
-      },
-    }));
-  };
+  // Обновлённая функция обработки изменений радиокнопок
+  const handleRadioChange = (category, field, value) => {
+    setSettings((prevSettings) => {
+      const currentValue = prevSettings[category][field];
+      const newValue = currentValue === value ? "none" : value; // Позволяем отменить выбор и вернуть "none"
 
-  const handleWayChange = (field) => {
-    setWay((prevWay) => ({
-      ...prevWay,
-      [field]: !prevWay[field],
-    }));
+      return {
+        ...prevSettings,
+        [category]: {
+          ...prevSettings[category],
+          [field]: newValue,
+        },
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Собираем активные поля в один массив
-    const selectedFields = [];
+    // Собираем выбранные поля по действиям
+    const mask = [];
+    const deleteFields = [];
+    const filter = [];
 
     const categories = ["account", "passport", "location", "bank", "study"];
 
     categories.forEach((category) => {
       Object.keys(settings[category]).forEach((field) => {
-        if (settings[category][field]) {
-          selectedFields.push(field);
+        const action = settings[category][field];
+        if (action === "mask") {
+          mask.push(field);
+        } else if (action === "delete") {
+          deleteFields.push(field);
+        } else if (action === "filter") {
+          filter.push(field);
         }
+        // Если action === "none", не добавляем поле
       });
     });
 
     const payload = {
-      Mask: way.Mask,
-      Delete: way.Delete,
-      Filter: way.Filter,
-      Fields_to_hide: selectedFields,
+      mask,
+      delete: deleteFields,
+      filter,
     };
 
     // Логируем отправляемые настройки для проверки
-    console.log("Отправляемые поля:", payload);
+    console.log("Отправляемые поля и действия:", payload);
 
     try {
       await updateSettings(payload);
@@ -221,7 +223,7 @@ function AdminPanel() {
     // Добавляем все скрытые поля из settings
     Object.keys(settings).forEach((category) => {
       Object.keys(settings[category]).forEach((field) => {
-        if (settings[category][field]) {
+        if (settings[category][field] === "mask" || settings[category][field] === "delete") {
           hiddenFields.add(field);
         }
       });
@@ -274,84 +276,73 @@ function AdminPanel() {
         >
           <h2>Фильтры</h2>
           <form onSubmit={handleSubmit} className="filters-form">
-            <div className="settings-category">
-              <h3>Настройки</h3>
-              {Object.keys(way).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input type="checkbox" checked={way[field]} onChange={() => handleWayChange(field)} />
-                  {field}
-                </label>
-              ))}
-            </div>
-            <div className="settings-category">
-              <h3>Контактные Данные</h3>
-              {Object.keys(settings.account).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.account[field]}
-                    onChange={() => handleCheckboxChange("account", field)}
-                  />
-                  {field}
-                </label>
-              ))}
-            </div>
-
-            <div className="settings-category">
-              <h3>Паспортные данные</h3>
-              {Object.keys(settings.passport).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.passport[field]}
-                    onChange={() => handleCheckboxChange("passport", field)}
-                  />
-                  {field}
-                </label>
-              ))}
-            </div>
-
-            <div className="settings-category">
-              <h3>Геоданные</h3>
-              {Object.keys(settings.location).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.location[field]}
-                    onChange={() => handleCheckboxChange("location", field)}
-                  />
-                  {field}
-                </label>
-              ))}
-            </div>
-
-            <div className="settings-category">
-              <h3>Банковские данные</h3>
-              {Object.keys(settings.bank).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.bank[field]}
-                    onChange={() => handleCheckboxChange("bank", field)}
-                  />
-                  {field}
-                </label>
-              ))}
-            </div>
-
-            <div className="settings-category">
-              <h3>Информация об учебе</h3>
-              {Object.keys(settings.study).map((field) => (
-                <label key={field} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.study[field]}
-                    onChange={() => handleCheckboxChange("study", field)}
-                  />
-                  {field}
-                </label>
-              ))}
-            </div>
+            {["account", "passport", "location", "bank", "study"].map((category) => (
+              <div key={category} className="settings-category">
+                <h3>
+                  {(() => {
+                    switch (category) {
+                      case "account":
+                        return "Контактные Данные";
+                      case "passport":
+                        return "Паспортные данные";
+                      case "location":
+                        return "Геоданные";
+                      case "bank":
+                        return "Банковские данные";
+                      case "study":
+                        return "Информация об учебе";
+                      default:
+                        return category;
+                    }
+                  })()}
+                </h3>
+                {Object.keys(settings[category]).map((field) => (
+                  <div key={field} className="radio-group">
+                    <span className="field-label">{field}</span>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name={`${category}-${field}`}
+                        value="mask"
+                        checked={settings[category][field] === "mask"}
+                        onChange={() => handleRadioChange(category, field, "mask")}
+                      />
+                      <FaMask className="icon" title="Mask" aria-label="Mask" />
+                    </label>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name={`${category}-${field}`}
+                        value="delete"
+                        checked={settings[category][field] === "delete"}
+                        onChange={() => handleRadioChange(category, field, "delete")}
+                      />
+                      <FaTrash className="icon" title="Delete" aria-label="Delete" />
+                    </label>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name={`${category}-${field}`}
+                        value="filter"
+                        checked={settings[category][field] === "filter"}
+                        onChange={() => handleRadioChange(category, field, "filter")}
+                      />
+                      <FaFilter className="icon" title="Filter" aria-label="Filter" />
+                    </label>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name={`${category}-${field}`}
+                        value="none"
+                        checked={settings[category][field] === "none"}
+                        onChange={() => handleRadioChange(category, field, "none")}
+                      />
+                      <FaTimes className="icon" title="None" aria-label="None" />
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ))}
 
             <button type="submit" className="save-button">
               Сохранить настройки
