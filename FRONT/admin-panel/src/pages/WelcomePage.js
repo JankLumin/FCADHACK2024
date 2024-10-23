@@ -2,9 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { FaReact, FaJs, FaPython, FaDatabase, FaShieldAlt, FaDocker, FaHtml5, FaCss3Alt } from "react-icons/fa";
+import { FaReact, FaJs, FaPython, FaShieldAlt, FaDocker, FaHtml5, FaCss3Alt, FaCookieBite } from "react-icons/fa";
+import { DiRedis } from "react-icons/di";
 import { MdManageSearch } from "react-icons/md";
-import { SiDjango } from "react-icons/si";
+import { SiDjango, SiSqlite } from "react-icons/si";
 import "../styles/app.css";
 
 function WelcomePage() {
@@ -104,8 +105,17 @@ function WelcomePage() {
             whileHover={{ scale: 1.2, rotate: 10 }}
             whileTap={{ scale: 0.9 }}
           >
-            <FaDatabase size={50} color="#00BFFF" />
-            <p>PostgreSQL</p>
+            <DiRedis size={50} color="#ff0d00" />
+            <p>Redis</p>
+          </motion.div>
+          <motion.div
+            className="tech-icon"
+            variants={itemVariants}
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <SiSqlite size={50} color="#adadad" />
+            <p>SQLite</p>
           </motion.div>
           <motion.div
             className="tech-icon"
@@ -133,6 +143,15 @@ function WelcomePage() {
           >
             <MdManageSearch size={50} color="#57de18" />
             <p>Regular Expressions</p>
+          </motion.div>
+          <motion.div
+            className="tech-icon"
+            variants={itemVariants}
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <FaCookieBite size={50} color="#6e5a32" />
+            <p>Cookie</p>
           </motion.div>
         </div>
       </motion.div>

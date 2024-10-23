@@ -10,7 +10,7 @@ export const logoutUser = async () => {
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Ошибка при авторизации");
+        throw new Error(errorData.message || "Ошибка при выходе");
       }
   
       const data = await response.json();

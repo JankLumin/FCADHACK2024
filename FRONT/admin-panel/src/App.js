@@ -48,13 +48,26 @@ function App() {
     setIsSidebarOpen(false);
   };
 
+  const handleLogoClicked = () => {
+    navigate("/");
+  };
+
+  const onAdminClicked = () => {
+    navigate("/admin");
+  };
+
   return (
     <div className="container">
       {showSplash ? (
         <SplashScreen />
       ) : (
         <>
-          <Navbar onAuthClick={handleAuthClick} isAuthenticated={isAuthenticated} onLogoutClick={handleLogoutClick} />
+          <Navbar onAuthClick={handleAuthClick} 
+          isAuthenticated={isAuthenticated} 
+          onLogoutClick={handleLogoutClick} 
+          handleLogoClicked={handleLogoClicked} 
+          onAdminClicked={onAdminClicked}
+          />
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/" replace />} />
