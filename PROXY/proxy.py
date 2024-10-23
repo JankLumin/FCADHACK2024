@@ -159,7 +159,7 @@ class Proxy:
             return match.group(1) + "\n"
 
         result = re.sub(pattern, repl, text)
-        return (result,)
+        return result
 
 
 def parallel_load_json(lines):
