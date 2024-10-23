@@ -17,7 +17,8 @@ import { logoutUser } from "./services/logout";
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('access_token'))
+  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('access_token'));
+  const [userEmail, setUserEmail] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,9 +71,12 @@ function App() {
           />
           <Routes>
             <Route path="/" element={<WelcomePage />} />
-            <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/" replace />} />
+            <Route path="/admin" element={isAuthenticated ? <AdminPanel userEmail={userEmail} /> : <Navigate to="/" replace />} />
           </Routes>
-          <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} setIsAuthenticated={setIsAuthenticated}/>
+          <Sidebar isOpen={isSidebarOpen} 
+          onClose={handleCloseSidebar} 
+          setIsAuthenticated={setIsAuthenticated} 
+          setUserEmail={setUserEmail}/>
           {/* Контейнер для уведомлений */}
           <ToastContainer position="top-right" autoClose={3000} />
         </>

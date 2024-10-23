@@ -7,7 +7,7 @@ import "../styles/sidebar.css";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
-function Sidebar({ isOpen, onClose, setIsAuthenticated }) {
+function Sidebar({ isOpen, onClose, setIsAuthenticated, setUserEmail }) {
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleForm = () => {
@@ -39,7 +39,7 @@ function Sidebar({ isOpen, onClose, setIsAuthenticated }) {
           <FiX size={24} />
         </button>
         {isLogin ? (
-          <LoginForm onSwitch={toggleForm} onClose={onClose} setIsAuthenticated={setIsAuthenticated}/>
+          <LoginForm onSwitch={toggleForm} onClose={onClose} setIsAuthenticated={setIsAuthenticated} setUserEmail={setUserEmail}/>
         ) : (
           <RegisterForm onSwitch={toggleForm} onClose={onClose}/>
         )}
