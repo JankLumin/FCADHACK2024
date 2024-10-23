@@ -46,7 +46,7 @@ class Proxy:
         result = self.create_json(dictionaries)
 
         result = list("[\n" + ",\n".join(i) + "\n]" for i in result)
-        return result, message["X-UserEmail"]
+        return result
 
     def send_to_back(self, messages, user, endpoint):
         """
@@ -57,6 +57,7 @@ class Proxy:
         try:
             url = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
             for message in messages:
+
                 headers = {
                     "X-UserEmail": user,
                     "X-Num-Of-Packet": f"{counter}",
@@ -115,12 +116,26 @@ class Proxy:
         list_to_del = list()
         index = 0
         for i in dictionaries:
+            for j in fields_to_hide:
+                if j in i:
+                    list_to_del.append(index)
+                    break
+            index += 1
+
+        list_to_del = list_to_del[::-1]
+        for i in list_to_del:
+            dictionaries.pop(i)
+
+        list_to_del.clear()
+        index = 0
+
+        for i in dictionaries:
             if self.replace_data_filter(i["Message"], fields_to_hide) == True:
                 list_to_del.append(index)
             index += 1
         list_to_del = list_to_del[::-1]
         for i in list_to_del:
-            dictionaries.remove(i)
+            dictionaries.pop(i)
         return dictionaries
 
     def delete_message(self, dictionaries, fields_to_hide):
@@ -129,14 +144,14 @@ class Proxy:
                 if j in i:
                     del i[j]
         for i in dictionaries:
-            i["Message"] = self.replace_data_filter(i["Message"], fields_to_hide)
+            i["Message"] = self.replace_data_delete(i["Message"], fields_to_hide)
         return dictionaries
 
     def mask_message(self, dictionaries, fields_to_hide):
         for i in dictionaries:
             for j in fields_to_hide:
                 if j in i:
-                    i[j] = "*" * len(i[j])
+                    i[j] = "*"
         for i in dictionaries:
             i["Message"] = self.replace_data_mask(i["Message"], fields_to_hide)
         return dictionaries
@@ -199,21 +214,25 @@ proxy = Proxy(ENDPOINT)
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
+        email = ""
         # Предполагается, что данные приходят в виде JSON или простой строки
         if request.is_json:
             data = request.get_json()
+            email = request.headers.get("X-UserEmail")
             message = json.dumps(data, ensure_ascii=False)
         else:
             message = request.get_data(as_text=True)
 
         print(f"Получено сообщение от frontend: {message}")
+        print(email)
         STATUS = True
         # Обработка сообщения
-        processed_message, user = proxy.process_message(message)
+        processed_message = proxy.process_message(message)
+        print(processed_message)
         # print(f"Обработанное сообщение: {processed_message}")
 
         # Отправка на бэкенд
-        response = proxy.send_to_back(processed_message, user, ENDPOINT)
+        response = proxy.send_to_back(processed_message, email, ENDPOINT)
         STATUS = False
         if response is None:
             return (

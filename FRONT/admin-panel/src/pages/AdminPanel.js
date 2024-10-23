@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { FaMask, FaTrash, FaFilter, FaTimes } from "react-icons/fa"; // Импортируем иконки
 import "../styles/adminPanel.css";
 
-function AdminPanel({userEmail}) {
+function AdminPanel({ userEmail }) {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -95,7 +95,7 @@ function AdminPanel({userEmail}) {
       setIsConnected(true); // Обновляем состояние подключения
 
       // Отправляем команду на сервер для начала передачи данных
-      socket.send(JSON.stringify({ command: "start sending user data", "X-UserEmail": {userEmail} }));
+      socket.send(JSON.stringify({ command: "start sending user data", "X-UserEmail": `${userEmail}` }));
     };
 
     // Обработчик получения сообщений

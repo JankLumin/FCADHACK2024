@@ -12,7 +12,6 @@ export const fetchUserData = async () => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      
     },
   });
 
@@ -30,7 +29,7 @@ export const updateSettings = async (selectedFields, email) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-UserEmail": {email}
+      "X-UserEmail": `${email}`,
     },
     body: JSON.stringify(selectedFields),
   });
