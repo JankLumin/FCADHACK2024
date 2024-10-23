@@ -35,11 +35,10 @@ function WelcomePage() {
       animate="visible"
       transition={{ duration: 1 }}
     >
-      <motion.h1 variants={itemVariants}>FCADHACK 2024 (OSTOCITY)</motion.h1>
+      <motion.h1 variants={itemVariants}>FCADHACK 2024</motion.h1>
       <motion.h2 variants={itemVariants}>Разработка Proxy-сервиса сквозной фильтрации и маскирования ЧД/ПД</motion.h2>
       <motion.p className="description" variants={itemVariants}>
-        FCADHACK 2024 — это уникальное событие для разработчиков, инженеров и энтузиастов технологий. Присоединяйтесь к
-        нам, чтобы создать инновационные решения, поработать в команде и поделиться своими идеями.
+        Команда OstoCity пред
       </motion.p>
 
       <motion.div className="tech-stack" variants={itemVariants}>

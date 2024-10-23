@@ -30,7 +30,7 @@
   border-radius: 10px;
   width: 250px;
   min-width: 200px;
-  max-height: 80vh;
+  max-height: 100vh;
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
@@ -40,6 +40,23 @@
 .filters-panel h2 {
   margin-bottom: 15px;
   color: #ffffff; /* Белый цвет заголовка */
+}
+
+.filters-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filters-panel::-webkit-scrollbar-track {
+  background: #2c2c2c;
+}
+
+.filters-panel::-webkit-scrollbar-thumb {
+  background: #888888;
+  border-radius: 4px;
+}
+
+.filters-panel::-webkit-scrollbar-thumb:hover {
+  background: #555555;
 }
 
 .settings-category {
@@ -174,7 +191,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  table-layout: fixed; /* Фиксированная ширина колонок */
+  /*table-layout: fixed; /* Фиксированная ширина колонок */
   font-size: 14px; /* Увеличен размер шрифта для таблицы */
 }
 
