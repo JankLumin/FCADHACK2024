@@ -30,7 +30,7 @@ export const updateSettings = async (selectedFields, email) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-UserEmail": {email}
+      "X-UserEmail": `${email}`
     },
     body: JSON.stringify(selectedFields),
   });

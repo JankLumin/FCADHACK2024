@@ -95,7 +95,7 @@ function AdminPanel({userEmail}) {
       setIsConnected(true); // Обновляем состояние подключения
 
       // Отправляем команду на сервер для начала передачи данных
-      socket.send(JSON.stringify({ command: "start sending user data", "X-UserEmail": {userEmail} }));
+      socket.send(JSON.stringify({ command: "start sending user data", "X-UserEmail": `${userEmail}` }));
     };
 
     // Обработчик получения сообщений
