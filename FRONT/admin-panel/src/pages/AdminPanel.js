@@ -276,6 +276,9 @@ function AdminPanel({ userEmail }) {
         >
           <h2>Фильтры</h2>
           <form onSubmit={handleSubmit} className="filters-form">
+            <button type="submit" className="save-button">
+              Применить параметры
+            </button>
             {["account", "passport", "location", "bank", "study"].map((category) => (
               <div key={category} className="settings-category">
                 <h3>
@@ -343,10 +346,6 @@ function AdminPanel({ userEmail }) {
                 ))}
               </div>
             ))}
-
-            <button type="submit" className="save-button">
-              Сохранить настройки
-            </button>
           </form>
         </motion.aside>
 

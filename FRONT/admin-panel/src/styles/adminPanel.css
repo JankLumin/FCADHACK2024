@@ -164,7 +164,7 @@
   cursor: pointer; /* Изменение курсора при наведении */
   transition: background-color 0.3s, transform 0.2s;
   font-weight: bold;
-  margin-top: 15px; /* Уменьшен отступ */
+  margin-bottom: 15px; /* Уменьшен отступ */
   width: 100%;
   font-size: 0.95em; /* Уменьшен размер шрифта */
 }

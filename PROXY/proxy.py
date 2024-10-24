@@ -130,8 +130,9 @@ class Proxy:
         index = 0
 
         for i in dictionaries:
-            if self.replace_data_filter(i["Message"], fields_to_hide) == True:
-                list_to_del.append(index)
+            if "Messge" in i:
+                if self.replace_data_filter(i["Message"], fields_to_hide) == True:
+                    list_to_del.append(index)
             index += 1
         list_to_del = list_to_del[::-1]
         for i in list_to_del:
@@ -144,16 +145,18 @@ class Proxy:
                 if j in i:
                     del i[j]
         for i in dictionaries:
-            i["Message"] = self.replace_data_delete(i["Message"], fields_to_hide)
+            if "Messge" in i:
+                i["Message"] = self.replace_data_delete(i["Message"], fields_to_hide)
         return dictionaries
 
     def mask_message(self, dictionaries, fields_to_hide):
         for i in dictionaries:
             for j in fields_to_hide:
                 if j in i:
-                    i[j] = "*"
+                    i[j] = "***"
         for i in dictionaries:
-            i["Message"] = self.replace_data_mask(i["Message"], fields_to_hide)
+            if "Messge" in i:
+                i["Message"] = self.replace_data_mask(i["Message"], fields_to_hide)
         return dictionaries
 
     def replace_data_mask(self, text, personal_data_list):
