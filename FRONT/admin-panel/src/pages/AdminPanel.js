@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { updateSettings } from "../services/admin";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import { FaMask, FaTrash, FaFilter, FaTimes } from "react-icons/fa"; // Импортируем иконки
+import { FaMask, FaTrash, FaFilter, FaTimes, FaBroom } from "react-icons/fa"; // Импортируем иконки
 import "../styles/adminPanel.css";
 
 function AdminPanel({ userEmail }) {
@@ -258,6 +258,14 @@ function AdminPanel({ userEmail }) {
   const goToPrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+  // Функция для очистки данных таблицы
+  const handleClearData = () => {
+    if (userData.length === 0) {
+      toast.info("Таблица уже пуста.");
+      return;
+    }
+    setUserData([]);
+  };
 
   return (
     <motion.div
@@ -373,6 +381,14 @@ function AdminPanel({ userEmail }) {
               disabled={!isConnected} // Используем состояние подключения
             >
               Отключиться
+            </button>
+            <button
+              onClick={handleClearData}
+              className="clear-button"
+              disabled={userData.length === 0} // Отключаем кнопку, если данных нет
+              title="Очистить таблицу"
+            >
+              <FaBroom className="icon" /> Очистить данные
             </button>
           </div>
 

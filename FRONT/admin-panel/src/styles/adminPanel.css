@@ -197,6 +197,40 @@
   color: var(--error-color);
 }
 
+/* Стили для кнопки очистки данных */
+.clear-button {
+  padding: 6px 12px; /* Соответствует стилю websocket-button */
+  margin-right: 8px; /* Отступ справа */
+  background-color: #f44336; /* Красный фон для обозначения действия очистки */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer; /* Изменение курсора при наведении */
+  font-size: 0.9em; /* Соответствует стилю websocket-button */
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.clear-button:disabled {
+  background-color: #e57373; /* Более светлый красный для отключенной кнопки */
+  cursor: not-allowed; /* Запрещающий курсор для отключенных кнопок */
+}
+
+.clear-button:hover:not(:disabled) {
+  background-color: #d32f2f; /* Темно-красный при наведении */
+}
+
+.clear-button .icon {
+  margin-right: 5px; /* Отступ между иконкой и текстом */
+  font-size: 1em; /* Размер иконки */
+  transition: transform 0.2s;
+}
+
+.clear-button:hover .icon:not(:disabled) {
+  transform: rotate(-10deg); /* Небольшой поворот иконки при наведении */
+}
+
 /* Центральная область данных */
 .data-section {
   flex: 1;
