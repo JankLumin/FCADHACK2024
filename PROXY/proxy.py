@@ -7,10 +7,11 @@ import time
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Импортируем Flask-CORS
+import asyncio
 
 number_of_cores = 12
+USER_TASKS = {}
 ENDPOINT = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
-STATUS = False
 app = Flask(__name__)
 CORS(app)  # Разрешаем CORS для всех доменов и методов
 
@@ -52,7 +53,6 @@ class Proxy:
         """
         Отправляет обработанное сообщение на бек
         """
-        STATUS = False
         counter = 1
         try:
             url = "http://127.0.0.1:8000/api/admin-panel/upload-user-data/"
@@ -74,8 +74,7 @@ class Proxy:
                     print(
                         f"Ошибка при отправке запроса: {response.status_code}, {response.text}"
                     )
-                if STATUS == True:
-                    break
+
 
         except Exception as e:
             print(f"Ошибка при отправке запроса на бекенд: {e}")
@@ -211,62 +210,78 @@ def create_json(dictionary):
     return json.dumps(dictionary, ensure_ascii=False)
 
 
-proxy = Proxy(ENDPOINT)
-
-
-@app.route("/upload", methods=["POST"])
-def upload():
+async def handle_request(email, message):
     try:
-        email = ""
-        # Предполагается, что данные приходят в виде JSON или простой строки
-        if request.is_json:
-            data = request.get_json()
-            email = request.headers.get("X-UserEmail")
-            message = json.dumps(data, ensure_ascii=False)
-        else:
-            message = request.get_data(as_text=True)
-
-        print(f"Получено сообщение от frontend: {message}")
-        print(email)
-        STATUS = True
-        # Обработка сообщения
+        print(f"Обработка запроса от {email}")
+        proxy = Proxy(ENDPOINT)
+        # Обрабатываем сообщение
         processed_message = proxy.process_message(message)
-        print(processed_message)
-        # print(f"Обработанное сообщение: {processed_message}")
 
-        # Отправка на бэкенд
-        response = proxy.send_to_back(processed_message, email, ENDPOINT)
-        STATUS = False
+        # Асинхронно отправляем данные на бекенд
+        response = await asyncio.to_thread(proxy.send_to_back, processed_message, email, ENDPOINT)
+
+        # Если ответ от бэкенда пустой или не был отправлен
         if response is None:
-            return (
-                jsonify(
-                    {"status": "error", "message": "Ошибка при отправке на бэкенд"}
-                ),
-                500,
-            )
+            return jsonify({"status": "error", "message": "Ошибка при отправке на бэкенд"}), 500
 
-        # Прокси-сервер будет передавать ответ бэкенда клиенту
+        # Прокси-сервер возвращает ответ бэкенда клиенту
         try:
             backend_response = response.json()
         except ValueError:
             backend_response = response.text
 
-        return (
-            jsonify(
-                {
-                    "status": "success" if response.status_code == 201 else "error",
-                    "backend_status": response.status_code,
-                    "backend_response": backend_response,
-                }
-            ),
-            response.status_code,
-        )
+        # Возвращаем ответ клиенту
+        return jsonify({
+            "status": "success" if response.status_code == 201 else "error",
+            "backend_status": response.status_code,
+            "backend_response": backend_response,
+        }), response.status_code
 
     except Exception as e:
         print(f"Ошибка при обработке запроса: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+@app.route("/upload", methods=["POST"])
+async def upload():
+    try:
+        if request.is_json:
+            data = request.get_json()
+            message = json.dumps(data, ensure_ascii=False)
+        else:
+            message = request.get_data(as_text=True)
+
+        email = request.headers.get("X-UserEmail")
+
+
+        print(f"Получено сообщение от {email}")
+
+        # Если для этого email уже есть активная задача, отменим её
+        if email in USER_TASKS:
+            USER_TASKS[email].cancel()  # Отменяем предыдущую задачу
+            del USER_TASKS[email]       # Удаляем из словаря
+
+        # Создаем новую асинхронную задачу для обработки запроса
+        task = asyncio.create_task(handle_request(email, message))
+        USER_TASKS[email] = task
+
+        return jsonify({"status": "success", "message": "Запрос обрабатывается"}), 200
+
+    except Exception as e:
+        print(f"Ошибка при обработке запроса: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
+
+
+
 if __name__ == "__main__":
-    # Запуск Flask-сервера
-    app.run(host="127.0.0.1", port=8080)
+    # Для работы Flask с asyncio нужен сервер, который поддерживает асинхронность, например, Hypercorn или Uvicorn.
+    import hypercorn.asyncio
+    from hypercorn.config import Config
+
+    config = Config()
+    config.bind = ["127.0.0.1:8080"]
+
+    asyncio.run(hypercorn.asyncio.serve(app, config))
